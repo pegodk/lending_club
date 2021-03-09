@@ -1,13 +1,8 @@
-import re
 import numpy as np
 import pandas as pd
-import datetime
+import itertools
 from sklearn.tree import _tree
 import matplotlib.pyplot as plt
-from sklearn.metrics import auc, roc_curve, precision_recall_fscore_support
-from sklearn.preprocessing import label_binarize
-import itertools
-re_not_decimal = re.compile(r'[^\.0-9]*')
 
 
 def print_test_results(print_str, df):
@@ -76,13 +71,6 @@ def int_rates_by_categorical(df, column, with_variance=False, sort=True):
     plt.close()
 
 
-def calc_CAGR_vec(df):
-    funded_amnt = df['funded_amnt']
-    total_pymnt = df['total_pymnt']
-    avg_term = (df['term'] + 1) / 12.0
-    return np.round(100 / np.power(funded_amnt / total_pymnt, 1 / (avg_term / 2)) - 100, 2)
-
-
 def returns_by_categorical(df, column, with_variance=False, sort=True):
     returns = calc_CAGR_vec(df)
     if sort:
@@ -147,7 +135,7 @@ def def_rates_by_hist(df, column, bin_idx):
     plt.xlabel(column)
     plt.ylabel("Default rate")
     plt.tight_layout()
-    plt.savefig('../results/plots/defaultRate___' + column + '.png')
+    plt.savefig('../results/plots/defaultRate_' + column + '.png')
 
 
 def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
@@ -223,13 +211,11 @@ def draw_tree(ensemble, tree_id=0):
     plt.subplot(211)
     tree = ensemble.estimators_[tree_id].tree_
     depths = leaf_depths(tree)
-    plt.hist(depths, histtype='step', color='#9933ff',
-             bins=range(min(depths), max(depths) + 1))
+    plt.hist(depths, histtype='step', color='#9933ff', bins=range(min(depths), max(depths) + 1))
     plt.xlabel("Depth of leaf nodes (tree %s)" % tree_id)
     plt.subplot(212)
     samples = leaf_samples(tree)
-    plt.hist(samples, histtype='step', color='#3399ff',
-             bins=range(min(samples), max(samples) + 1))
+    plt.hist(samples, histtype='step', color='#3399ff', bins=range(min(samples), max(samples) + 1))
     plt.xlabel("Number of samples in leaf nodes (tree %s)" % tree_id)
     plt.show()
 

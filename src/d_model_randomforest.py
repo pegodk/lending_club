@@ -1,16 +1,11 @@
-import os
 import pandas as pd
 import numpy as np
-import datetime
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import confusion_matrix
-from sklearn.tree import export_graphviz
 from src.utils import calc_CAGR_vec, process_emp_length, process_home, print_test_results
 
 if __name__ == "__main__":
@@ -38,7 +33,7 @@ if __name__ == "__main__":
                       "default"]
 
     # Read the datasets
-    df = pd.read_csv('../data/processed/dataset_cleaned.csv', usecols=domain_columns, nrows=10000)
+    df = pd.read_csv('../data/processed/dataset_cleaned.csv', usecols=domain_columns)
 
     # Process features into numerical values
     df['emp_length'] = df['emp_length'].apply(process_emp_length)
@@ -46,26 +41,12 @@ if __name__ == "__main__":
     df['sub_grade'] = [subgrade_sorted.index(subgrade) for subgrade in df['sub_grade']]
     df['home_ownership'] = df['home_ownership'].apply(process_home)
 
-    # df['revol_util'] = df['revol_util'].apply(process_revol_util)
-    # df['emp_title'] = df['emp_title'].fillna('None')
-    # df['pub_rec_bankruptcies'] = df['pub_rec_bankruptcies'].fillna(0)
-    # df['home_ownership2'] = df['home_ownership'].apply(process_home)
-    #
-    # # Construct new features
-    # df['issue_year'] = df['issue_d'].apply(process_issueyear)
-    # df['requested_minus_funded'] = df['loan_amnt'] - df['funded_amnt']
-    # df['has_employer_info'] = df['emp_title'].isnull()
-    # df['is_employed'] = df['emp_length'].isnull()
-    # df['installment_over_income'] = df['installment'] * 12 / df['annual_inc']
-    # df['debt_to_income'] = (df['revol_bal'] + df['funded_amnt']) / df['annual_inc']
-
-    print(df[:10].to_string())
+    # TODO: Investigate problem with NaN
     df.dropna(inplace=True)
 
     # Split dataset into train and test
-    X = df[domain_columns].copy()
+    X = df[domain_columns]
     y = calc_CAGR_vec(df)
-
     X_train, X_test, y_train, y_test = train_test_split(X, y)
 
     print('Length of training set:', len(y_train))
