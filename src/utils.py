@@ -11,8 +11,9 @@ re_not_decimal = re.compile(r'[^\.0-9]*')
 
 
 def print_test_results(print_str, df):
-    print_str = print_str + " " * (60 - len(print_str))
-    print(print_str, f"default rate = {calc_default(df)}%", "\t", f"return = {calc_CAGR(df)}%")
+    print_str = print_str + " " * (50 - len(print_str))
+    print(print_str, f"default rate = {calc_default(df)}%", "\t", f"return = {calc_CAGR(df)}%", "\t",
+          f"no of loans = {len(df)}")
 
 
 def calc_default(df):
