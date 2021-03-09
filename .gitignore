@@ -5,6 +5,8 @@
 ## Add custom entries below here.
 ##
 scripts/config.json
+data/
+results/
 
 ##
 ## R Section - See https://github.com/github/gitignore/blob/master/R.gitignore
