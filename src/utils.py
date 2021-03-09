@@ -6,6 +6,8 @@ from sklearn.tree import _tree
 import matplotlib.pyplot as plt
 from sklearn.metrics import auc, roc_curve, precision_recall_fscore_support
 from sklearn.preprocessing import label_binarize
+import itertools
+re_not_decimal = re.compile(r'[^\.0-9]*')
 
 
 def print_test_results(print_str, df):
@@ -40,8 +42,8 @@ def def_rates_by_categorical(df, column, sort=True):
         props = props.sort_values()
     plt.figure()
     ax = props.plot(kind='bar')
-    ax.set_ylabel("Default Rate")
-    ax.set_title("Default Rates by {}".format(column))
+    ax.set_ylabel("Default rate")
+    ax.set_title("Default rates by {}".format(column))
     ax.set_xlabel(column)
     plt.tight_layout()
     plt.savefig('../results/plots/histogram_' + column + '.png')
@@ -65,12 +67,19 @@ def int_rates_by_categorical(df, column, with_variance=False, sort=True):
         ax = dataframe.plot(kind='bar', yerr=vars)
     else:
         ax = dataframe.plot(kind='bar')
-    ax.set_ylabel("Interest Rate (%)")
-    ax.set_title("Interest Rate by {}".format(column))
+    ax.set_ylabel("Interest rate (%)")
+    ax.set_title("Interest rate by {}".format(column))
     ax.set_xlabel(column)
     plt.tight_layout()
     plt.savefig('../results/plots/interestRate_' + column + '.png')
     plt.close()
+
+
+def calc_CAGR_vec(df):
+    funded_amnt = df['funded_amnt']
+    total_pymnt = df['total_pymnt']
+    avg_term = (df['term'] + 1) / 12.0
+    return np.round(100 / np.power(funded_amnt / total_pymnt, 1 / (avg_term / 2)) - 100, 2)
 
 
 def returns_by_categorical(df, column, with_variance=False, sort=True):
@@ -133,18 +142,11 @@ def def_rates_by_hist(df, column, bin_idx):
 
     plt.figure()
     plt.plot(x_new, no_rate)
-    plt.title("Default Rates by {}".format(column))
+    plt.title("Default rates by {}".format(column))
     plt.xlabel(column)
-    plt.ylabel("Default Rate")
+    plt.ylabel("Default rate")
     plt.tight_layout()
     plt.savefig('../results/plots/defaultRate___' + column + '.png')
-
-
-def round_to_nearest(x, base=1):
-    return base * int(x / base)
-
-
-import itertools
 
 
 def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
@@ -170,55 +172,13 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     plt.xlabel('Predicted label')
 
 
-re_not_decimal = re.compile(r'[^\.0-9]*')
-
-
-def process_int_rate(x):
-    x = x.strip()
-    x = re_not_decimal.sub("", x)
-    return float(x)
-
-
-def process_revol_util(x):
-    if pd.isnull(x):
-        return 0
-    else:
-        x = x.strip()
-        x = re_not_decimal.sub("", x)
-        return float(x)
-
-
-def process_term(x):
-    x = re_not_decimal.sub("", x)
-    return int(x)
-
-
 def process_emp_length(x):
-    try:
-        x = re_not_decimal.sub("", x)
-        if x == '':
-            return np.nan
-        else:
-            return float(x)
-    except:
-        return np.nan
-
-
-def process_grade(x):
-    if x == 'A':
+    if x == "< 1 year":
         return 0
-    if x == 'B':
-        return 1
-    if x == 'C':
-        return 2
-    if x == 'D':
-        return 3
-    if x == 'E':
-        return 4
-    if x == 'F':
-        return 5
-    if x == 'G':
-        return 6
+    elif x == "None":
+        return -1
+    else:
+        return int(str(x).split(" ")[0].split("+")[0])
 
 
 def process_home(x):
@@ -231,7 +191,6 @@ def process_home(x):
     if x == 'NONE':
         return 3
     return 4
-
 
 
 def leaf_depths(tree, node_id=0):
