@@ -38,64 +38,64 @@ df['debt_to_income'] = (df['revol_bal'] + df['funded_amnt']) / df['annual_inc']
 
 print_CAGR = True
 if print_CAGR:
-    print("CAGR on all loans \t\t\t\t\t\t\t\t\t", calc_CAGR(df), "%")
+    print("CAGR on all loans \t\t\t\t\t\t\t\t\t", calc_annual_return(df), "%")
 
     idx = df['purpose'] == 'wedding'
-    print("CAGR on wedding loans (", idx.sum(), ") \t\t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on wedding loans (", idx.sum(), ") \t\t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['purpose'] == 'wedding'
-    print("CAGR on credit card loans (", idx.sum(), ") \t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on credit card loans (", idx.sum(), ") \t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['purpose'] == 'car'
-    print("CAGR on car loans (", idx.sum(), ") \t\t\t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on car loans (", idx.sum(), ") \t\t\t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['purpose'] == 'small_business'
-    print("CAGR on small business loans (", idx.sum(), ") \t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on small business loans (", idx.sum(), ") \t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['home_ownership'] == 'RENT'
-    print("CAGR on home renters (", idx.sum(), ") \t\t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on home renters (", idx.sum(), ") \t\t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = np.logical_or(df['home_ownership'] == 'OWN', df['home_ownership'] == 'MORTGAGE')
-    print("CAGR on home owners (", idx.sum(), ") \t\t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on home owners (", idx.sum(), ") \t\t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['grade'] == 1
-    print("CAGR on grade A loans (", idx.sum(), ") \t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on grade A loans (", idx.sum(), ") \t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['grade'] == 2
-    print("CAGR on grade C loans (", idx.sum(), ") \t\t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on grade C loans (", idx.sum(), ") \t\t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['grade'] == 6
-    print("CAGR on grade F loans (", idx.sum(), ") \t\t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on grade F loans (", idx.sum(), ") \t\t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['emp_title'] == 'Wal-Mart'
-    print("CAGR on Wal-Mart loans (", idx.sum(), ") \t\t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on Wal-Mart loans (", idx.sum(), ") \t\t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['emp_title'] == 'US Army'
-    print("CAGR on US Army loans (", idx.sum(), ") \t\t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on US Army loans (", idx.sum(), ") \t\t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['emp_title'] == 'Wells Fargo'
-    print("CAGR on Wells Fargo loans (", idx.sum(), ") \t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on Wells Fargo loans (", idx.sum(), ") \t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = df['annual_inc'] < 12500
-    print("CAGR on income below 12.5k (", idx.sum(), ") \t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on income below 12.5k (", idx.sum(), ") \t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
     idx = np.logical_and(df['annual_inc'] > 12500, df['annual_inc'] < 25000)
-    print("CAGR on income above 12.5k and below 25k (", idx.sum(), ") \t", calc_CAGR(df[idx]), "%")
+    print("CAGR on income above 12.5k and below 25k (", idx.sum(), ") \t", calc_annual_return(df[idx]), "%")
 
     idx = np.logical_and(df['annual_inc'] > 25000, df['annual_inc'] < 50000)
-    print("CAGR on income above 25k and below 50k (", idx.sum(), ") \t", calc_CAGR(df[idx]), "%")
+    print("CAGR on income above 25k and below 50k (", idx.sum(), ") \t", calc_annual_return(df[idx]), "%")
 
     idx = np.logical_and(df['annual_inc'] > 50000, df['annual_inc'] < 100000)
-    print("CAGR on income above 50k and below 100k (", idx.sum(), ") \t", calc_CAGR(df[idx]), "%")
+    print("CAGR on income above 50k and below 100k (", idx.sum(), ") \t", calc_annual_return(df[idx]), "%")
 
     idx = np.logical_and(df['annual_inc'] > 100000, df['annual_inc'] < 200000)
-    print("CAGR on income above 100k and below 200k (", idx.sum(), ") \t", calc_CAGR(df[idx]), "%")
+    print("CAGR on income above 100k and below 200k (", idx.sum(), ") \t", calc_annual_return(df[idx]), "%")
 
     idx = np.logical_and(df['annual_inc'] > 200000, df['annual_inc'] < 400000)
-    print("CAGR on income above 200k and below 400k (", idx.sum(), ") \t", calc_CAGR(df[idx]), "%")
+    print("CAGR on income above 200k and below 400k (", idx.sum(), ") \t", calc_annual_return(df[idx]), "%")
 
     idx = df['annual_inc'] > 400000
-    print("CAGR on income above 400k (", idx.sum(), ") \t\t\t\t\t", calc_CAGR(df[idx]), "%")
+    print("CAGR on income above 400k (", idx.sum(), ") \t\t\t\t\t", calc_annual_return(df[idx]), "%")
 
 print_HIST = True
 if print_HIST:
@@ -157,7 +157,7 @@ domain_columns = ['loan_amnt',
 #                   'total_pymnt']
 
 X = df[domain_columns].copy()
-y = calc_CAGR_vec(df)
+y = calc_annual_return_vec(df)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
@@ -282,24 +282,24 @@ if print_FeatureImportance:
 print_Results = True
 if print_Results:
     idx = y_test_predict > 15.0
-    print('Yield (15%  < predict):\t\t\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (15%  < predict):\t\t\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 10.0, y_test_predict < 15.0)
-    print('Yield (10%  < predict < 15%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (10%  < predict < 15%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 5.0, y_test_predict < 10.0)
-    print('Yield (5%   < predict < 10%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (5%   < predict < 10%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 0.0, y_test_predict < 5.0)
-    print('Yield (0%   < predict < 5%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (0%   < predict < 5%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > -10.0, y_test_predict < 0.0)
-    print('Yield (-10% < predict < 0%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (-10% < predict < 0%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > -20.0, y_test_predict < -10.0)
-    print('Yield (-20% < predict < -10%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (-20% < predict < -10%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = y_test_predict < -20.0
-    print('Yield (-20% > predict):\t\t\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (-20% > predict):\t\t\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
 plt.show(block=True)

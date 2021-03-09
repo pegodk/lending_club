@@ -80,7 +80,7 @@ domain_columns = ['loan_amnt',
 #                   'total_pymnt']
 
 X = df[domain_columns].copy()
-y = calc_CAGR_vec(df)
+y = calc_annual_return_vec(df)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
@@ -206,24 +206,24 @@ if print_FeatureImportance:
 print_Results = True
 if print_Results:
     idx = y_test_predict > 15.0
-    print('Yield (15%  < predict):\t\t\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (15%  < predict):\t\t\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 10.0, y_test_predict < 15.0)
-    print('Yield (10%  < predict < 15%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (10%  < predict < 15%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 5.0, y_test_predict < 10.0)
-    print('Yield (5%   < predict < 10%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (5%   < predict < 10%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 0.0, y_test_predict < 5.0)
-    print('Yield (0%   < predict < 5%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (0%   < predict < 5%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > -10.0, y_test_predict < 0.0)
-    print('Yield (-10% < predict < 0%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (-10% < predict < 0%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > -20.0, y_test_predict < -10.0)
-    print('Yield (-20% < predict < -10%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (-20% < predict < -10%):\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = y_test_predict < -20.0
-    print('Yield (-20% > predict):\t\t\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
+    print('Yield (-20% > predict):\t\t\t\t', calc_annual_return(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
 plt.show(block=True)

@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
-from src.utils import calc_CAGR_vec, process_emp_length, process_home, print_test_results
+from src.utils import calc_annual_return_vec, process_emp_length, process_home, print_test_results
 
 if __name__ == "__main__":
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     # Split dataset into train and test
     X = df[domain_columns]
-    y = calc_CAGR_vec(df)
+    y = calc_annual_return_vec(df)
     X_train, X_test, y_train, y_test = train_test_split(X, y)
 
     print('Length of training set:', len(y_train))

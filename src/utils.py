@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 def print_test_results(print_str, df):
     print_str = print_str + " " * (50 - len(print_str))
-    print(print_str, f"default rate = {calc_default(df)}%", "\t", f"return = {calc_CAGR(df)}%", "\t",
+    print(print_str, f"default rate = {calc_default(df)}%", "\t", f"return = {calc_annual_return(df)}%", "\t",
           f"no of loans = {len(df)}")
 
 
@@ -15,14 +15,14 @@ def calc_default(df):
     return np.round(np.sum(df["default"] / len(df)) * 100, 1)
 
 
-def calc_CAGR(df):
+def calc_annual_return(df):
     funded_amnt = df['funded_amnt'].sum()
     total_pymnt = df['total_pymnt'].sum()
     avg_term = (df['term'].mean() + 1) / 12.0
     return np.round(100 / np.power(funded_amnt / total_pymnt, 1 / (avg_term / 2)) - 100, 2)
 
 
-def calc_CAGR_vec(df):
+def calc_annual_return_vec(df):
     funded_amnt = df['funded_amnt']
     total_pymnt = df['total_pymnt']
     avg_term = (df['term'] + 1) / 12.0
@@ -72,7 +72,7 @@ def int_rates_by_categorical(df, column, with_variance=False, sort=True):
 
 
 def returns_by_categorical(df, column, with_variance=False, sort=True):
-    returns = calc_CAGR_vec(df)
+    returns = calc_annual_return_vec(df)
     if sort:
         df = df.sort_values(by=column)
     labels = df[column].unique()
