@@ -1,10 +1,6 @@
-{% if cookiecutter.devops_organisation != '' %}
-[![Build Status](https://dev.azure.com/{{cookiecutter.devops_organisation}}/{{cookiecutter.repo_name}}/_apis/build/status/equinor.{{cookiecutter.repo_name}}?branchName=master)](https://dev.azure.com/{{cookiecutter.devops_organisation}}/{{cookiecutter.repo_name}}/_build/latest?definitionId=1&branchName=master)
-{% endif %}
+# Lending Club Credit Risk Modelling
 
-# {{cookiecutter.project_name}}
-
-{{cookiecutter.project_description}}
+An investigation of different credit risk models and methods based on the Lending Club dataset with over 1.3 millions loans.
 
 ## Setup
 1. Install git and checkout the [git code repository]
