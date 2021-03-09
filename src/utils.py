@@ -8,12 +8,20 @@ from sklearn.metrics import auc, roc_curve, precision_recall_fscore_support
 from sklearn.preprocessing import label_binarize
 
 
+def print_test_results(print_str, df):
+    print_str = print_str + " " * (60 - len(print_str))
+    print(print_str, f"default rate = {calc_default(df)}%", "\t", f"return = {calc_CAGR(df)}%")
+
+
 def calc_CAGR(df):
     funded_amnt = df['funded_amnt'].sum()
     total_pymnt = df['total_pymnt'].sum()
     avg_term = (df['term'].mean() + 1) / 12.0
-    R = np.round(100 / np.power(funded_amnt / total_pymnt, 1 / (avg_term / 2)) - 100, 2)
-    return R
+    return np.round(100 / np.power(funded_amnt / total_pymnt, 1 / (avg_term / 2)) - 100, 2)
+
+
+def calc_default(df):
+    return np.round(np.sum(df["default"] / len(df)) * 100, 1)
 
 
 def calc_CAGR_vec(df):
