@@ -1,11 +1,10 @@
-from util import *
 import os
+import datetime
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import featuretools as ft
 import featuretools.variable_types as vtypes
-
 import matplotlib.ticker as ticker
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
@@ -14,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import confusion_matrix
 from sklearn.tree import export_graphviz
-import datetime
+from utils import *
 
 
 # Read the datasets
@@ -23,53 +22,30 @@ df = pd.read_csv('../data/raw/LoanStats3a.csv')
 print("The data has {0} rows and {1} fields".format(*df.shape))
 # print(df.head(1).T)
 
-df                              = df[df.loan_status.isin(['Fully Paid', 'Charged Off'])]
-df['int_rate']                  = df['int_rate'].apply(process_int_rate)
-df['term']                      = df['term'].apply(process_term)
-df['grade']                     = df['grade'].apply(process_grade)
-df['emp_length']                = df['emp_length'].apply(process_emp_length)
-df['revol_util']                = df['revol_util'].apply(process_revol_util)
-df['emp_title']                 = df['emp_title'].fillna('None')
-df['pub_rec_bankruptcies']      = df['pub_rec_bankruptcies'].fillna(0)
-df['home_ownership']            = df['home_ownership'].apply(process_home)
+df = df[df.loan_status.isin(['Fully Paid', 'Charged Off'])]
+df['int_rate'] = df['int_rate'].apply(process_int_rate)
+df['term'] = df['term'].apply(process_term)
+df['grade'] = df['grade'].apply(process_grade)
+df['emp_length'] = df['emp_length'].apply(process_emp_length)
+df['revol_util'] = df['revol_util'].apply(process_revol_util)
+df['emp_title'] = df['emp_title'].fillna('None')
+df['pub_rec_bankruptcies'] = df['pub_rec_bankruptcies'].fillna(0)
+df['home_ownership'] = df['home_ownership'].apply(process_home)
 
 # Construct new features
-df['issue_year']                = df['issue_d'].apply(process_issueyear)
-df['requested_minus_funded']    = df['loan_amnt'] - df['funded_amnt']
-df['has_employer_info']         = df['emp_title'].isnull()
-df['is_employed']               = df['emp_length'].isnull()
-df['installment_over_income']   = df['installment'] * 12 / df['annual_inc']
-df['debt_to_income']            = (df['revol_bal'] + df['funded_amnt']) / df['annual_inc']
-
+df['issue_year'] = df['issue_d'].apply(process_issueyear)
+df['requested_minus_funded'] = df['loan_amnt'] - df['funded_amnt']
+df['has_employer_info'] = df['emp_title'].isnull()
+df['is_employed'] = df['emp_length'].isnull()
+df['installment_over_income'] = df['installment'] * 12 / df['annual_inc']
+df['debt_to_income'] = (df['revol_bal'] + df['funded_amnt']) / df['annual_inc']
 
 print(df.index)
-
-
-
-
 
 # for index in ['SK_ID_CURR', 'SK_ID_PREV', 'SK_ID_BUREAU']:
 #     for dataset in [app, bureau, bureau_balance, cash, credit, previous, installments]:
 #         if index in list(dataset.columns):
 #             dataset[index] = dataset[index].fillna(0).astype(np.int64)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # ######################################################################################################################
@@ -116,8 +92,8 @@ reg = RandomForestRegressor()
 # reg = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=1, random_state=0, loss='ls')
 
 reg.fit(X_train.drop(columns=['total_pymnt']), y_train)
-y_train_predict  = np.round(reg.predict(X_train.drop(columns=['total_pymnt'])), 2)
-y_test_predict   = np.round(reg.predict(X_test.drop(columns=['total_pymnt'])), 2)
+y_train_predict = np.round(reg.predict(X_train.drop(columns=['total_pymnt'])), 2)
+y_test_predict = np.round(reg.predict(X_test.drop(columns=['total_pymnt'])), 2)
 
 # reg.fit(X_train, y_train)
 # y_train_predict  = np.round(reg.predict(X_train), 2)
@@ -171,16 +147,16 @@ print('Mean Abs Error: {:.2f}'.format(scores))
 print_FeatureImportance = False
 if print_FeatureImportance:
     importances = reg.feature_importances_
-    std         = np.std([tree.feature_importances_ for tree in reg.estimators_], axis=0)
-    indices     = np.flip(np.argsort(importances), axis=0)
-    xaxis       = np.linspace(0, len(indices)-1, len(indices))
-    names       = []
+    std = np.std([tree.feature_importances_ for tree in reg.estimators_], axis=0)
+    indices = np.flip(np.argsort(importances), axis=0)
+    xaxis = np.linspace(0, len(indices) - 1, len(indices))
+    names = []
     for idx in indices:
         names.append(domain_columns[idx])
 
     ax = plt.figure()
     plt.title("Feature Importance")
-    plt.bar(xaxis, importances[indices]*100, color="r", yerr=std[indices]*100, align="center")
+    plt.bar(xaxis, importances[indices] * 100, color="r", yerr=std[indices] * 100, align="center")
     plt.xticks(xaxis, names, rotation=90)
     plt.ylabel('%')
     plt.tight_layout()
@@ -209,7 +185,7 @@ if print_FeatureImportance:
 
 # for tree_in_forest in reg.estimators_:
 #     export_graphviz(tree_in_forest, feature_names=X.drop(columns=['total_pymnt']).columns, filled=True, rounded=True, out_file='tree.dot')
-    # os.system('dot -Tpng tree.dot -o tree.png')
+# os.system('dot -Tpng tree.dot -o tree.png')
 
 # tree_in_forest = reg.estimators_[5]
 # export_graphviz(tree_in_forest, feature_names=X.drop(columns=['total_pymnt']).columns, filled=True, rounded=True, out_file='tree.dot')
@@ -223,7 +199,6 @@ if print_FeatureImportance:
 # call(['dot', '-Tpng', 'tree.dot', '-o', 'tree.png'])
 
 
-
 # ######################################################################################################################
 # ########################################      Evaluating Output Results      #########################################
 # ######################################################################################################################
@@ -231,26 +206,24 @@ if print_FeatureImportance:
 print_Results = True
 if print_Results:
     idx = y_test_predict > 15.0
-    print('Yield (15%  < predict):\t\t\t\t', calc_CAGR(X_test[idx]), '%   \t\t',idx.sum(),'\tloans')
+    print('Yield (15%  < predict):\t\t\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 10.0, y_test_predict < 15.0)
-    print('Yield (10%  < predict < 15%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t',idx.sum(),'\tloans')
+    print('Yield (10%  < predict < 15%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 5.0, y_test_predict < 10.0)
-    print('Yield (5%   < predict < 10%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t',idx.sum(),'\tloans')
+    print('Yield (5%   < predict < 10%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > 0.0, y_test_predict < 5.0)
-    print('Yield (0%   < predict < 5%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t',idx.sum(),'\tloans')
+    print('Yield (0%   < predict < 5%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > -10.0, y_test_predict < 0.0)
-    print('Yield (-10% < predict < 0%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t',idx.sum(),'\tloans')
+    print('Yield (-10% < predict < 0%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = np.logical_and(y_test_predict > -20.0, y_test_predict < -10.0)
-    print('Yield (-20% < predict < -10%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t',idx.sum(),'\tloans')
+    print('Yield (-20% < predict < -10%):\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
     idx = y_test_predict < -20.0
-    print('Yield (-20% > predict):\t\t\t\t', calc_CAGR(X_test[idx]), '%   \t\t',idx.sum(),'\tloans')
-
+    print('Yield (-20% > predict):\t\t\t\t', calc_CAGR(X_test[idx]), '%   \t\t', idx.sum(), '\tloans')
 
 plt.show(block=True)
-

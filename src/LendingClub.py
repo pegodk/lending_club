@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import confusion_matrix
 from sklearn.tree import export_graphviz
-from util import *
+from utils import *
 
 # Read the datasets
 df = pd.read_csv('../data/raw/LoanStats3a.csv')
@@ -97,7 +97,7 @@ if print_CAGR:
     idx = df['annual_inc'] > 400000
     print("CAGR on income above 400k (", idx.sum(), ") \t\t\t\t\t", calc_CAGR(df[idx]), "%")
 
-print_HIST = False
+print_HIST = True
 if print_HIST:
     plt.figure()
     df.loan_status.value_counts().plot(kind='bar')
