@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import itertools
-from sklearn.tree import _tree
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set()
@@ -44,6 +43,7 @@ def plot_by_woe(df_woe, rotation=0):
     plt.title("Weight of Evidence by " + df_woe.columns[0].upper())
     plt.xticks(rotation=rotation)
     plt.tight_layout()
+    plt.savefig('../results/weight_of_evidence/' + df_woe.columns[0] + '.png')
 
 
 def print_test_results(print_str, df):
@@ -71,7 +71,7 @@ def calc_annual_return_vec(df):
 
 
 def def_rates_by_categorical(df, column, sort=True):
-    grouped = df.groupby([column, 'loan_status'])
+    grouped = df.groupby([column, 'good_bad'])
     def_counts = grouped['loan_amnt'].count().unstack()
     N = def_counts.sum(axis=1)
     props = def_counts['Charged Off'] / N
@@ -140,7 +140,7 @@ def returns_by_categorical(df, column, with_variance=False, sort=True):
 
 def def_rates_by_hist(df, column, bin_idx):
     df = df.sort_values(column)
-    grouped = df.groupby([column, 'loan_status'])
+    grouped = df.groupby([column, 'good_bad'])
     def_counts = grouped[column].count().unstack()
     def_counts = def_counts.fillna(value=0)
 
@@ -211,78 +211,12 @@ def process_emp_length(x):
         return int(str(x).split(" ")[0].split("+")[0])
 
 
-def process_home(x):
-    if x == 'OWN':
-        return 0
-    if x == 'MORTGAGE':
-        return 1
-    if x == 'RENT':
-        return 2
-    if x == 'NONE':
-        return 3
-    return 4
-
-
-def leaf_depths(tree, node_id=0):
-    left_child = tree.children_left[node_id]
-    right_child = tree.children_right[node_id]
-    if left_child == _tree.TREE_LEAF:
-        depths = np.array([0])
+def process_home_ownership(x):
+    if x == 'ANY':
+        return 'RENT'
+    elif x == 'OTHER':
+        return 'RENT'
+    elif x == 'NONE':
+        return 'RENT'
     else:
-        left_depths = leaf_depths(tree, left_child) + 1
-        right_depths = leaf_depths(tree, right_child) + 1
-        depths = np.append(left_depths, right_depths)
-    return depths
-
-
-def leaf_samples(tree, node_id=0):
-    left_child = tree.children_left[node_id]
-    right_child = tree.children_right[node_id]
-    if left_child == _tree.TREE_LEAF:
-        samples = np.array([tree.n_node_samples[node_id]])
-    else:
-        left_samples = leaf_samples(tree, left_child)
-        right_samples = leaf_samples(tree, right_child)
-        samples = np.append(left_samples, right_samples)
-    return samples
-
-
-def draw_tree(ensemble, tree_id=0):
-    plt.figure(figsize=(8, 8))
-    plt.subplot(211)
-    tree = ensemble.estimators_[tree_id].tree_
-    depths = leaf_depths(tree)
-    plt.hist(depths, histtype='step', color='#9933ff', bins=range(min(depths), max(depths) + 1))
-    plt.xlabel("Depth of leaf nodes (tree %s)" % tree_id)
-    plt.subplot(212)
-    samples = leaf_samples(tree)
-    plt.hist(samples, histtype='step', color='#3399ff', bins=range(min(samples), max(samples) + 1))
-    plt.xlabel("Number of samples in leaf nodes (tree %s)" % tree_id)
-    plt.show()
-
-
-def draw_ensemble(ensemble):
-    plt.figure(figsize=(8, 8))
-    plt.subplot(211)
-    depths_all = np.array([], dtype=int)
-    for x in ensemble.estimators_:
-        tree = x.tree_
-        depths = leaf_depths(tree)
-        depths_all = np.append(depths_all, depths)
-        plt.hist(depths, histtype='step', color='#ddaaff', bins=range(min(depths), max(depths) + 1))
-    plt.hist(depths_all, histtype='step', color='#9933ff', bins=range(min(depths_all), max(depths_all) + 1),
-             weights=np.ones(len(depths_all)) / len(ensemble.estimators_), linewidth=2)
-    plt.xlabel("Depth of leaf nodes")
-    samples_all = np.array([], dtype=int)
-    plt.subplot(212)
-    for x in ensemble.estimators_:
-        tree = x.tree_
-        samples = leaf_samples(tree)
-        samples_all = np.append(samples_all, samples)
-        plt.hist(samples, histtype='step', color='#aaddff', bins=range(min(samples), max(samples) + 1))
-    plt.hist(samples_all, histtype='step', color='#3399ff',
-             bins=range(min(samples_all), max(samples_all) + 1),
-             weights=np.ones(len(samples_all)) / len(ensemble.estimators_),
-             linewidth=2)
-    plt.xlabel("Number of samples in leaf nodes")
-    plt.show()
+        return x

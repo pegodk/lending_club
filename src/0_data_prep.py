@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from src.utils import process_emp_length, convert_to_num
+from src.utils import process_emp_length, process_home_ownership, convert_to_num
 
 if __name__ == "__main__":
     columns_subset = ["loan_amnt",
@@ -23,7 +23,6 @@ if __name__ == "__main__":
                       "dti",
                       "earliest_cr_line",
                       "fico_range_low",
-                      "fico_range_high",
                       "total_acc",
                       "total_pymnt"]
 
@@ -41,6 +40,9 @@ if __name__ == "__main__":
     df['emp_length'].fillna('None', inplace=True)
     df['emp_length'] = df['emp_length'].apply(process_emp_length)
 
+    # Put ANY/OTHER/NONE together with RENT in home_ownership
+    df['home_ownership'] = df['home_ownership'].apply(process_home_ownership)
+
     # Convert "term" to int number
     df['term'] = [int(str(string)[:3]) for string in df['term']]
 
@@ -51,8 +53,8 @@ if __name__ == "__main__":
     train, test = train_test_split(df, test_size=0.2, random_state=42)
 
     # Save cleaned dataset to csv file
-    train.to_csv('../data/processed/dataset_train.csv', index=False)
-    test.to_csv('../data/processed/dataset_test.csv', index=False)
+    train.to_csv('../data/temp/dataset_train.csv', index=False)
+    test.to_csv('../data/temp/dataset_test.csv', index=False)
 
     print(train[:10].to_string())
     print(test[:10].to_string())
