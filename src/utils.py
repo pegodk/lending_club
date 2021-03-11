@@ -3,6 +3,47 @@ import pandas as pd
 import itertools
 from sklearn.tree import _tree
 import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set()
+
+
+def convert_to_num(pd_series):
+    pd_series = pd.to_numeric(pd_series, errors='coerce')
+    pd_series = pd_series.replace([np.inf, -np.inf], np.nan)
+    return pd_series
+
+
+def weight_of_evidence(df, var_name, good_bad_var, discrete=True):
+    df = pd.concat([df[var_name], df[good_bad_var]], axis=1)
+    df = pd.concat([df.groupby(df.columns.values[0], as_index=False)[df.columns.values[1]].count(),
+                    df.groupby(df.columns.values[0], as_index=False)[df.columns.values[1]].mean()], axis=1)
+    df = df.iloc[:, [0, 1, 3]]
+    df.columns = [df.columns[0], 'n_obs', 'prop_good']
+    df['prop_n_obs'] = df['n_obs'] / df['n_obs'].sum()
+    df['n_good'] = (df['prop_good'] * df['n_obs'])
+    df['n_bad'] = ((1 - df['prop_good']) * df['n_obs'])
+    df['prob_n_good'] = df['n_good'] / df['n_good'].sum()
+    df['prob_n_bad'] = df['n_bad'] / df['n_bad'].sum()
+    df['woe'] = np.log(df['prob_n_good'] / df['prob_n_bad'])
+    if discrete:
+        df = df.sort_values(['woe'])
+        df = df.reset_index(drop=True)
+    df['diff_prob_good'] = df['prob_n_good'].diff().abs()
+    df['diff_woe'] = df['woe'].diff().abs()
+    df['IV'] = ((df['prob_n_good'] - df['prob_n_bad']) * df['woe']).sum()
+    return df
+
+
+def plot_by_woe(df_woe, rotation=0):
+    X = np.array(df_woe.iloc[:, 0].apply(str))
+    y = df_woe["woe"]
+    plt.figure(figsize=(18, 6))
+    plt.plot(X, y, marker='o', linestyle='--', color='k')
+    plt.xlabel(df_woe.columns[0])
+    plt.ylabel("Weight of Evidence")
+    plt.title("Weight of Evidence by " + df_woe.columns[0].upper())
+    plt.xticks(rotation=rotation)
+    plt.tight_layout()
 
 
 def print_test_results(print_str, df):
@@ -164,7 +205,7 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
 def process_emp_length(x):
     if x == "< 1 year":
         return 0
-    elif x == "None":
+    elif x == 'None':
         return -1
     else:
         return int(str(x).split(" ")[0].split("+")[0])
