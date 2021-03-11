@@ -31,11 +31,7 @@ if __name__ == "__main__":
     y_test = pd.read_csv('../data/processed/y_test.csv', sep=";", nrows=10000)
 
     reg = LogisticRegression(max_iter=10000)
-
     reg.fit(X_train, y_train)
-
-    print(reg.intercept_)
-    print(reg.coef_)
 
     summary_table = pd.DataFrame(columns=["feature"], data=X_train.columns.values)
     summary_table["coefficient"] = np.transpose(reg.coef_)

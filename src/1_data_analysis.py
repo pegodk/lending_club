@@ -16,7 +16,6 @@ if __name__ == "__main__":
     df["annual_inc"] = pd.qcut(df["annual_inc"], 20)
     df["dti"] = pd.qcut(df["dti"], 20)
     df["fico_range_low"] = pd.cut(df["fico_range_low"], 20)
-    df["total_acc"] = pd.qcut(df["total_acc"], 20)
 
     # print(weight_of_evidence(df, var_name='grade', good_bad_var='good_bad').to_string())
     # print(weight_of_evidence(df, var_name='home_ownership', good_bad_var='good_bad').to_string())
@@ -35,7 +34,6 @@ if __name__ == "__main__":
     plot_woe(weight_of_evidence(df, var_name='annual_inc', good_bad_var='good_bad', discrete=False), rotation=35)
     plot_woe(weight_of_evidence(df, var_name='dti', good_bad_var='good_bad', discrete=False), rotation=35)
     plot_woe(weight_of_evidence(df, var_name='fico_range_low', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_woe(weight_of_evidence(df, var_name='total_acc', good_bad_var='good_bad', discrete=False), rotation=35)
 
     # # Print results for all loans and different subsets
     # print_test_results(f"CAGR on all loans:", df)

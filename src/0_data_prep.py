@@ -23,7 +23,6 @@ if __name__ == "__main__":
                       "dti",
                       "earliest_cr_line",
                       "fico_range_low",
-                      "total_acc",
                       "total_pymnt"]
 
     df = pd.read_csv('../data/raw/accepted_2007_to_2018Q4.csv', usecols=columns_subset)
