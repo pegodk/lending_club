@@ -33,7 +33,7 @@ def weight_of_evidence(df, var_name, good_bad_var, discrete=True):
     return df
 
 
-def plot_by_woe(df_woe, rotation=0):
+def plot_woe(df_woe, rotation=0):
     X = np.array(df_woe.iloc[:, 0].apply(str))
     y = df_woe["woe"]
     plt.figure(figsize=(18, 6))

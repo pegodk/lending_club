@@ -21,11 +21,14 @@ def one_hot_encoder(X_train, X_test):
     X_test_enc = None
 
     for col in X_train.columns:
+
+        # Fit encoder to training data
         encoder = OneHotEncoder()
         enc_train = encoder.fit_transform(X_train[[col]])
         enc_train = pd.DataFrame(enc_train.toarray(), columns=encoder.categories_)
         enc_train.columns = [col + "_" + str(new_col[0]) for new_col in enc_train.columns]
 
+        # Apply fitted encoder to test data
         enc_test = encoder.transform(X_test[[col]])
         enc_test = pd.DataFrame(enc_test.toarray(), columns=encoder.categories_)
         enc_test.columns = [col + "_" + str(new_col[0]) for new_col in enc_test.columns]

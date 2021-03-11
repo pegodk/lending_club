@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import ttest_ind
-from src.utils import print_test_results, calc_annual_return_vec, weight_of_evidence, plot_by_woe
+from src.utils import print_test_results, calc_annual_return_vec, weight_of_evidence, plot_woe
 from src.utils import def_rates_by_categorical, int_rates_by_categorical, returns_by_categorical, def_rates_by_hist
 
 
@@ -23,19 +23,19 @@ if __name__ == "__main__":
     # print(weight_of_evidence(df, var_name='addr_state', good_bad_var='good_bad').to_string())
     # print(weight_of_evidence(df, var_name='emp_length', good_bad_var='good_bad').to_string())
 
-    plot_by_woe(weight_of_evidence(df, var_name='term', good_bad_var='good_bad'))
-    plot_by_woe(weight_of_evidence(df, var_name='grade', good_bad_var='good_bad'))
-    plot_by_woe(weight_of_evidence(df, var_name='sub_grade', good_bad_var='good_bad'))
-    plot_by_woe(weight_of_evidence(df, var_name='home_ownership', good_bad_var='good_bad'))
-    plot_by_woe(weight_of_evidence(df, var_name='addr_state', good_bad_var='good_bad'))
-    plot_by_woe(weight_of_evidence(df, var_name='purpose', good_bad_var='good_bad'))
-    plot_by_woe(weight_of_evidence(df, var_name='emp_length', good_bad_var='good_bad', discrete=False))
-    plot_by_woe(weight_of_evidence(df, var_name='loan_amnt', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_by_woe(weight_of_evidence(df, var_name='int_rate', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_by_woe(weight_of_evidence(df, var_name='annual_inc', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_by_woe(weight_of_evidence(df, var_name='dti', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_by_woe(weight_of_evidence(df, var_name='fico_range_low', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_by_woe(weight_of_evidence(df, var_name='total_acc', good_bad_var='good_bad', discrete=False), rotation=35)
+    plot_woe(weight_of_evidence(df, var_name='term', good_bad_var='good_bad'))
+    plot_woe(weight_of_evidence(df, var_name='grade', good_bad_var='good_bad'))
+    plot_woe(weight_of_evidence(df, var_name='sub_grade', good_bad_var='good_bad'))
+    plot_woe(weight_of_evidence(df, var_name='home_ownership', good_bad_var='good_bad'))
+    plot_woe(weight_of_evidence(df, var_name='addr_state', good_bad_var='good_bad'))
+    plot_woe(weight_of_evidence(df, var_name='purpose', good_bad_var='good_bad'))
+    plot_woe(weight_of_evidence(df, var_name='emp_length', good_bad_var='good_bad', discrete=False))
+    plot_woe(weight_of_evidence(df, var_name='loan_amnt', good_bad_var='good_bad', discrete=False), rotation=35)
+    plot_woe(weight_of_evidence(df, var_name='int_rate', good_bad_var='good_bad', discrete=False), rotation=35)
+    plot_woe(weight_of_evidence(df, var_name='annual_inc', good_bad_var='good_bad', discrete=False), rotation=35)
+    plot_woe(weight_of_evidence(df, var_name='dti', good_bad_var='good_bad', discrete=False), rotation=35)
+    plot_woe(weight_of_evidence(df, var_name='fico_range_low', good_bad_var='good_bad', discrete=False), rotation=35)
+    plot_woe(weight_of_evidence(df, var_name='total_acc', good_bad_var='good_bad', discrete=False), rotation=35)
 
     # # Print results for all loans and different subsets
     # print_test_results(f"CAGR on all loans:", df)
