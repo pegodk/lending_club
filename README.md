@@ -4,7 +4,7 @@ An investigation of different credit risk models and methods based on the Lendin
 
 ## Setup
 1. Download the dataset from: https://www.kaggle.com/wordsforthewise/lending-club
-2. Place the file "accepted_2007_to_2018Q4.csv" in the data/raw folder
+2. Copy the dataset "accepted_2007_to_2018Q4.csv" to the "data/raw" folder
 3. Create a virtual environment with python version 3.8
 4. Change working directory into the git code repository root
 5. Create the self contained conda environment. In a terminal go to the git code repository root and enter the command:
