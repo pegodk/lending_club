@@ -1,16 +1,17 @@
-# Lending Club Credit Risk Modelling
+# Credit Risk Modelling using the Lending Club dataset
 
 An investigation of different credit risk models and methods based on the Lending Club dataset with over 1.3 millions loans.
 
 ## Setup
-1. Install git and checkout the [git code repository]
-2. Create a virtual environment with python version 3.8
-3. Change working directory into the git code repository root
-4. Create the self contained conda environment. In a terminal go to the git code repository root and enter the command:
+1. Download the dataset from: https://www.kaggle.com/wordsforthewise/lending-club
+2. Place the file "accepted_2007_to_2018Q4.csv" in the data/raw folder
+3. Create a virtual environment with python version 3.8
+4. Change working directory into the git code repository root
+5. Create the self contained conda environment. In a terminal go to the git code repository root and enter the command:
 
    `conda env create --file conda_env.yml`
 
-5. Any python modules under src need to be available to other scripts. This can be done in a couple of ways. You can 
+6. Any python modules under src need to be available to other scripts. This can be done in a couple of ways. You can 
 setup and install the python modules by executing the setup.py command below which will install the packages to the 
 conda environments site-packages folder but with a symlink to the src folder so modifications are reflected immediately. 
 
@@ -19,7 +20,7 @@ conda environments site-packages folder but with a symlink to the src folder so 
     As an alternative you may prefer to set the python path directly from the console, within notebooks, test scripts 
     etc. From Pycharm you can also right click the src folder and select the _Mark Directory As | Source Root_ option.
 
-6. .. Place your own project specific setup steps here e.g. copying data files ...
+7. .. Place your own project specific setup steps here e.g. copying data files ...
 
 When distributing your module, you can create a Python egg with the command `python setup.py bdist_egg` and upload the egg.
 
