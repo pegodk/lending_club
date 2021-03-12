@@ -2,6 +2,8 @@
 
 An investigation of different credit risk models and methods based on the Lending Club dataset with over 1.3 millions loans.
 
+Inspiration taken from the course: https://udemy.com/course/credit-risk-modeling-in-python
+
 ## Setup
 1. Download the dataset from: https://www.kaggle.com/wordsforthewise/lending-club
 2. Copy the dataset "accepted_2007_to_2018Q4.csv" to the "data/raw" folder
@@ -122,6 +124,7 @@ To contribute an update simply:
 * Create a pull request.
 
 ## Important Links
+* https://udemy.com/course/credit-risk-modeling-in-python
 * https://www.kaggle.com/wordsforthewise/lending-club
 * https://www.lendingclub.com/
 
