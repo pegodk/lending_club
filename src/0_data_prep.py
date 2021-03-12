@@ -28,7 +28,8 @@ if __name__ == "__main__":
     df = pd.read_csv('../data/raw/accepted_2007_to_2018Q4.csv', usecols=columns_subset)
 
     # Create new features
-    df['installment_to_income'] = df['installment'] / (df['annual_inc'] / 12)
+    df['annual_inc'] = df['annual_inc'].fillna(0)
+    df['income_to_installment'] = (df['annual_inc'] / 12) / df['installment']
 
     # Remove all "current" loans and create new feature called "default"
     df = df[df["loan_status"].isin(["Fully Paid", "Charged Off", "Default"])]

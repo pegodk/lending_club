@@ -1,53 +1,17 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-from src.utils import calc_annual_return_vec, process_emp_length, process_home, print_test_results
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier
+from sklearn.metrics import mean_absolute_error, accuracy_score, roc_curve, roc_auc_score
+from src.utils import calc_annual_return_vec, print_test_results
 
 if __name__ == "__main__":
 
-    domain_columns = ["loan_amnt",
-                      "funded_amnt",
-                      "term",
-                      "int_rate",
-                      "installment",
-                      "sub_grade",
-                      # "emp_title",
-                      "emp_length",
-                      "home_ownership",
-                      "annual_inc",
-                      # "issue_d",
-                      # "purpose",
-                      # "title",
-                      # "addr_state",
-                      "dti",
-                      # "earliest_cr_line",
-                      "fico_range_low",
-                      "fico_range_high",
-                      "total_acc",
-                      "total_pymnt",
-                      "default"]
-
     # Read the datasets
-    df = pd.read_csv('../data/processed/dataset_cleaned.csv', usecols=domain_columns)
-
-    # Process features into numerical values
-    df['emp_length'] = df['emp_length'].apply(process_emp_length)
-    subgrade_sorted = sorted(np.unique(df["sub_grade"]))
-    df['sub_grade'] = [subgrade_sorted.index(subgrade) for subgrade in df['sub_grade']]
-    df['home_ownership'] = df['home_ownership'].apply(process_home)
-
-    # TODO: Investigate problem with NaN
-    df.dropna(inplace=True)
-
-    # Split dataset into train and test
-    X = df[domain_columns]
-    y = calc_annual_return_vec(df)
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    X_train = pd.read_csv('../data/processed/X_train_continuous.csv', sep=";")
+    y_train = pd.read_csv('../data/processed/y_train.csv', sep=";")
+    X_test = pd.read_csv('../data/processed/X_test_continuous.csv', sep=";")
+    y_test = pd.read_csv('../data/processed/y_test.csv', sep=";")
 
     print('Length of training set:', len(y_train))
     print('Length of testing set: ', len(y_test))
@@ -56,21 +20,30 @@ if __name__ == "__main__":
     ######################################      Random Forest Classification      ######################################
     ####################################################################################################################
 
-    reg = RandomForestRegressor()
-    # reg = GradientBoostingRegressor()
-    # reg = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=1, random_state=0, loss='ls')
+    reg = GradientBoostingClassifier()
 
-    reg.fit(X_train.drop(columns=['total_pymnt', 'default']), y_train)
-    y_train_predict = np.round(reg.predict(X_train.drop(columns=['total_pymnt', 'default'])), 2)
-    y_test_predict = np.round(reg.predict(X_test.drop(columns=['total_pymnt', 'default'])), 2)
+    reg.fit(X_train, y_train)
+    y_train_predict = np.round(reg.predict(X_train), 2)
+    y_test_predict = np.round(reg.predict(X_test), 2)
 
-    # reg.fit(X_train, y_train)
-    # y_train_predict  = np.round(reg.predict(X_train), 2)
-    # y_test_predict   = np.round(reg.predict(X_test), 2)
+    y_hat_test = reg.predict(X_test)
+    print("Accuracy:", accuracy_score(y_test, y_hat_test))
 
-    # print(pd.DataFrame(data={'int_rate': X['int_rate'], 'outcome': y}))
-    # print(pd.DataFrame(data={'int_rate': X_train['int_rate'], 'outcome': y_train, 'predict': y_train_predict}))
-    # print(pd.DataFrame(data={'int_rate': X_test['int_rate'], 'outcome': y_test, 'predict': y_test_predict}))
+    y_hat_test_proba = reg.predict_proba(X_test)[:][:, 1]
+    predictions = pd.concat([y_test.reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
+    predictions.columns = ["y_test", "y_hat_test_proba"]
+
+    fpr, tpr, thresholds = roc_curve(y_test, y_hat_test_proba)
+    auc = roc_auc_score(y_test, y_hat_test_proba)
+
+    plt.figure()
+    plt.plot(fpr, tpr)
+    plt.plot(fpr, fpr, linestyle="--", color="k")
+    plt.xlabel("False positive rate")
+    plt.ylabel("True positive rate")
+    plt.title(f"ROC curve (AUC = {np.round(auc, 2)})")
+    plt.savefig('../results/PD_GradientBoosting_model_auc.png')
+    plt.show()
 
     scores = mean_absolute_error(y_test_predict, y_test)
     print('Mean Abs Error: {:.2f}'.format(scores))
@@ -79,7 +52,7 @@ if __name__ == "__main__":
     ###########################################      Feature Importance      ###########################################
     ####################################################################################################################
 
-    print_FeatureImportance = True
+    print_FeatureImportance = False
     if print_FeatureImportance:
         importances = reg.feature_importances_
         std = np.std([tree.feature_importances_ for tree in reg.estimators_], axis=0)
@@ -87,7 +60,7 @@ if __name__ == "__main__":
         xaxis = np.linspace(0, len(indices) - 1, len(indices))
         names = []
         for idx in indices:
-            names.append(domain_columns[idx])
+            names.append(X_train.columns[idx])
 
         ax = plt.figure()
         plt.title("Feature Importance")
@@ -101,7 +74,7 @@ if __name__ == "__main__":
     #######################################      Evaluating Output Results      ########################################
     ####################################################################################################################
 
-    print_results = True
+    print_results = False
     if print_results:
         idx = y_test_predict > 15.0
         print_test_results(f"Yield (15%  < predict):", X_test[idx])

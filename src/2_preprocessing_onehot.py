@@ -3,10 +3,8 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
 
-def preprocess(train, test):
-    cols_to_cut = ["loan_amnt", "int_rate", "annual_inc", "dti", "fico_range_low", "total_acc", "installment_to_income"]
-
-    for col in cols_to_cut:
+def preprocess(train, test, continuous_vars):
+    for col in continuous_vars:
         # Create bins based on training set
         train[col], bins = pd.qcut(train[col], q=10, retbins=True, labels=False)
         bins = np.concatenate(([-np.inf], bins[1:-1], [np.inf]))
@@ -47,7 +45,8 @@ if __name__ == "__main__":
     df_train = pd.read_csv('../data/temp/dataset_train.csv')
     df_test = pd.read_csv('../data/temp/dataset_test.csv')
 
-    df_train, df_test = preprocess(df_train, df_test)
+    df_train, df_test = preprocess(df_train, df_test, continuous_vars=["loan_amnt", "int_rate", "annual_inc", "dti",
+                                                                       "fico_range_low", "installment_to_income"])
 
     print(df_train[:5].to_string())
     print(df_test[:5].to_string())
@@ -55,7 +54,7 @@ if __name__ == "__main__":
     input_vars = ["loan_amnt",
                   "term",
                   "int_rate",
-                  "installment_to_income",
+                  "income_to_installment",
                   "grade",
                   "emp_length",
                   "home_ownership",
@@ -63,8 +62,7 @@ if __name__ == "__main__":
                   "purpose",
                   "addr_state",
                   "dti",
-                  "fico_range_low",
-                  "total_acc"]
+                  "fico_range_low"]
 
     target_var = ["good_bad"]
 
@@ -77,7 +75,5 @@ if __name__ == "__main__":
 
     print(X_train[:5].to_string())
 
-    X_train.to_csv('../data/processed/X_train.csv', index=False, sep=";")
-    y_train.to_csv('../data/processed/y_train.csv', index=False, sep=";")
-    X_test.to_csv('../data/processed/X_test.csv', index=False, sep=";")
-    y_test.to_csv('../data/processed/y_test.csv', index=False, sep=";")
+    X_train.to_csv('../data/processed/X_train_onehot.csv', index=False, sep=";")
+    X_test.to_csv('../data/processed/X_test_onehot.csv', index=False, sep=";")
