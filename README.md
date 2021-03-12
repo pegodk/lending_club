@@ -12,7 +12,7 @@ Inspiration taken from the course: https://udemy.com/course/credit-risk-modeling
 
    `pip install -r requirements.txt`
 
-5. Run scripts in src in chronological order to clean dataset, preprocess, feature engineering and constructing models
+5. Run scripts in src in chronological order to clean dataset, preprocess and construct prediction models
 
 ## Initial File Structure
 
