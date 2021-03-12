@@ -8,42 +8,11 @@ Inspiration taken from the course: https://udemy.com/course/credit-risk-modeling
 1. Download the dataset from: https://www.kaggle.com/wordsforthewise/lending-club
 2. Copy the dataset "accepted_2007_to_2018Q4.csv" to the "data/raw" folder
 3. Create a virtual environment with python version 3.8
-4. Change working directory into the git code repository root
-5. Create the self contained conda environment. In a terminal go to the git code repository root and enter the command:
+4. Activate venv and install packages from requirements file
 
-   `conda env create --file conda_env.yml`
+   `pip install -r requirements.txt`
 
-6. Any python modules under src need to be available to other scripts. This can be done in a couple of ways. You can 
-setup and install the python modules by executing the setup.py command below which will install the packages to the 
-conda environments site-packages folder but with a symlink to the src folder so modifications are reflected immediately. 
-
-   `python setup.py develop`
-   
-    As an alternative you may prefer to set the python path directly from the console, within notebooks, test scripts 
-    etc. From Pycharm you can also right click the src folder and select the _Mark Directory As | Source Root_ option.
-
-7. .. Place your own project specific setup steps here e.g. copying data files ...
-
-When distributing your module, you can create a Python egg with the command `python setup.py bdist_egg` and upload the egg.
-
-## Using the Python Conda environment
-
-Once the Python Conda environment has been set up, you can
-
-* Activate the environment using the following command in a terminal window:
-
-  * Windows: `activate lending_club`
-  * Linux, OS X: `source activate lending_club`
-  * The __environment is activated per terminal session__, so you must activate it every time you open terminal.
-
-* Deactivate the environment using the following command in a terminal window:
-
-  * Windows: `deactivate lending_club`
-  * Linux, OS X: `source deactivate lending_club`
-               
-* Delete the environment using the command (can't be undone):
-
-  * `conda remove --name lending_club --all`
+5. Run scripts in src in chronological order to clean dataset, preprocess, feature engineering and constructing models
 
 ## Initial File Structure
 
