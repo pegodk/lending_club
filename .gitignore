@@ -6,7 +6,6 @@
 ##
 scripts/config.json
 data/
-results/
 
 ##
 ## R Section - See https://github.com/github/gitignore/blob/master/R.gitignore
