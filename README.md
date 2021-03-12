@@ -18,7 +18,7 @@ Inspiration taken from the course: https://udemy.com/course/credit-risk-modeling
 
 ```
 ├── .gitignore               <- Files that should be ignored by git. Add seperate .gitignore files in sub folders.
-├── conda_env.yml            <- Conda environment definition for ensuring consistent setup across environments
+├── conda_env.yml            <- Conda environment definition for ensuring consistent setup across environments.
 ├── LICENSE
 ├── README.md                <- The top-level README for developers using this project.
 ├── requirements.txt         <- The requirements file for reproducing the analysis environment, e.g.
