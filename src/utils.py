@@ -53,7 +53,7 @@ def print_test_results(print_str, df):
 
 
 def calc_default(df):
-    return np.round(np.sum(df["default"] / len(df)) * 100, 1)
+    return np.round(1 - np.sum(df["good_bad"] / len(df)) * 100, 1)
 
 
 def calc_annual_return(df):
