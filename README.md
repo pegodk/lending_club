@@ -17,8 +17,7 @@ Inspiration taken from the course: https://udemy.com/course/credit-risk-modeling
 ## Initial File Structure
 
 ```
-├── .gitignore               <- Files that should be ignored by git. Add seperate .gitignore files in sub folders if 
-│                               needed
+├── .gitignore               <- Files that should be ignored by git. Add seperate .gitignore files in sub folders.
 ├── conda_env.yml            <- Conda environment definition for ensuring consistent setup across environments
 ├── LICENSE
 ├── README.md                <- The top-level README for developers using this project.
