@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 anyio==2.2.0
 argon2-cffi==20.1.0
 async-generator==1.10
@@ -90,14 +89,3 @@ urllib3==1.26.3
 wcwidth==0.2.5
 webencodings==0.5.1
 zict==2.0.0
-=======
-flake8
-m2r
-nbformat
-numpy
-pandas
-pytest
-pytest-cookies
-pytest-cov
-sphinx
->>>>>>> parent of f48b4d0... dev
