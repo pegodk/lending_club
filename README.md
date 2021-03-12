@@ -30,18 +30,18 @@ Once the Python Conda environment has been set up, you can
 
 * Activate the environment using the following command in a terminal window:
 
-  * Windows: `activate {{cookiecutter.conda_name}}`
-  * Linux, OS X: `source activate {{cookiecutter.conda_name}}`
+  * Windows: `activate lending_club`
+  * Linux, OS X: `source activate lending_club`
   * The __environment is activated per terminal session__, so you must activate it every time you open terminal.
 
 * Deactivate the environment using the following command in a terminal window:
 
-  * Windows: `deactivate {{cookiecutter.conda_name}}`
-  * Linux, OS X: `source deactivate {{cookiecutter.conda_name}}`
+  * Windows: `deactivate lending_club`
+  * Linux, OS X: `source deactivate lending_club`
                
 * Delete the environment using the command (can't be undone):
 
-  * `conda remove --name {{cookiecutter.conda_name}} --all`
+  * `conda remove --name lending_club --all`
 
 ## Initial File Structure
 
@@ -122,9 +122,8 @@ To contribute an update simply:
 * Create a pull request.
 
 ## Important Links
-* https://wiki.equinor.com/wiki/index.php/Statoil_Data_Science_Technical_Standards - Data Science Technical Standards (Equinor Internal)
-* https://dataplatformwiki.azurewebsites.net/doku.php - Data Platform wiki (Equinor internal)
-* https://github.com/equinor/data-science-shared - Shared Data Science Code Repository (Equinor internal)
+* https://www.kaggle.com/wordsforthewise/lending-club
+* https://www.lendingclub.com/
 
 ## References
 * https://github.com/equinor/data-science-template/ - The master template for this project
