@@ -27,11 +27,9 @@ Inspiration taken from the course: https://udemy.com/course/credit-risk-modeling
 ├── setup.py                 <- Metadata about your project for easy distribution.
 │
 ├── data
-│   ├── interim_[desc]       <- Interim files - give these folders whatever name makes sense.
 │   ├── processed            <- The final, canonical data sets for modeling.
 │   ├── raw                  <- The original, immutable data dump.
-│   ├── temp                 <- Temporary files.
-│   └── training             <- Files relating to the training process
+│   └── temp                 <- Temporary files.
 │
 ├── docs                     <- Documentation
 │   ├── data_science_code_of_conduct.md  <- Code of conduct.
