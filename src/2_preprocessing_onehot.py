@@ -46,7 +46,7 @@ if __name__ == "__main__":
     df_test = pd.read_csv('../data/temp/dataset_test.csv')
 
     df_train, df_test = preprocess(df_train, df_test, continuous_vars=["loan_amnt", "int_rate", "annual_inc", "dti",
-                                                                       "fico_range_low", "installment_to_income"])
+                                                                       "fico_range_low", "income_to_installment"])
 
     print(df_train[:5].to_string())
     print(df_test[:5].to_string())
