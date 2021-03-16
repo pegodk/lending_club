@@ -34,29 +34,31 @@ if __name__ == "__main__":
     train = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'PD_train_onehot.csv'), sep=";")
     test = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'PD_test_onehot.csv'), sep=";")
 
-    target_var = "good_bad"
+    X_train = np.array(train.drop(columns="good_bad"))
+    y_train = np.array(train["good_bad"])
+    X_test = np.array(test.drop(columns="good_bad"))
+    y_test = np.array(test["good_bad"])
 
     # Define model and fit to training data
     reg = LogisticRegression(max_iter=10000)
-    reg.fit(train.drop(columns=target_var), train[target_var])
+    reg.fit(X_train, y_train)
 
-    summary_table = pd.DataFrame(columns=["feature"], data=train.columns.values)
+    summary_table = pd.DataFrame(columns=["feature"], data=train.drop(columns="good_bad").columns)
     summary_table["coefficient"] = np.transpose(reg.coef_)
     summary_table.index = summary_table.index + 1
     summary_table.loc[0] = ["intercept", reg.intercept_[0]]
     summary_table = summary_table.sort_index()
-    summary_table.to_csv('../results/SummaryTable_LogisticRegression.csv', sep=";", index=False)
-    # print(summary_table)
+    summary_table.to_csv(os.path.join(basedir, 'results', 'SummaryTable_LogisticRegression.csv'), sep=";", index=False)
 
-    y_hat_test = reg.predict(test.drop(columns=target_var))
-    print("Accuracy:", accuracy_score(test[target_var], y_hat_test))
+    y_hat_test = reg.predict(X_test)
+    print("Accuracy:", accuracy_score(y_test, y_hat_test))
 
-    y_hat_test_proba = reg.predict_proba(test.drop(columns=target_var))[:][:, 1]
-    predictions = pd.concat([test[target_var].reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
+    y_hat_test_proba = reg.predict_proba(X_test)[:][:, 1]
+    predictions = pd.concat([pd.DataFrame(y_test), pd.DataFrame(y_hat_test_proba)], axis=1)
     predictions.columns = ["y_test", "y_hat_test_proba"]
 
-    fpr, tpr, thresholds = roc_curve(test[target_var], y_hat_test_proba)
-    auc = roc_auc_score(test[target_var], y_hat_test_proba)
+    fpr, tpr, thresholds = roc_curve(y_test, y_hat_test_proba)
+    auc = roc_auc_score(y_test, y_hat_test_proba)
 
     plt.figure()
     plt.plot(fpr, tpr)

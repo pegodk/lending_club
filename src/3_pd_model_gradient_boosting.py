@@ -36,7 +36,7 @@ if __name__ == "__main__":
     print("Accuracy:", accuracy_score(y_test, y_hat_test))
 
     y_hat_test_proba = reg.predict_proba(X_test)[:][:, 1]
-    predictions = pd.concat([y_test.reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
+    predictions = pd.concat([pd.DataFrame(y_test), pd.DataFrame(y_hat_test_proba)], axis=1)
     predictions.columns = ["y_test", "y_hat_test_proba"]
 
     fpr, tpr, thresholds = roc_curve(y_test, y_hat_test_proba)
