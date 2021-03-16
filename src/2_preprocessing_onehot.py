@@ -64,18 +64,15 @@ if __name__ == "__main__":
                   "purpose",
                   "addr_state",
                   "dti",
-                  "fico_range_low"]
+                  "fico_range_low",
+                  "good_bad"]
 
-    target_var = ["good_bad"]
+    PD_train = df_train[input_vars]
+    PD_test = df_test[input_vars]
 
-    X_train = df_train[input_vars]
-    y_train = df_train[target_var]
-    X_test = df_test[input_vars]
-    y_test = df_test[target_var]
+    PD_train, PD_test = one_hot_encoder(PD_train, PD_test)
 
-    X_train, X_test = one_hot_encoder(X_train, X_test)
+    print(PD_train[:5].to_string())
 
-    print(X_train[:5].to_string())
-
-    X_train.to_csv(os.path.join(basedir, 'data', 'processed', 'X_train_onehot.csv'), index=False, sep=";")
-    X_test.to_csv(os.path.join(basedir, 'data', 'processed', 'X_test_onehot.csv'), index=False, sep=";")
+    PD_train.to_csv(os.path.join(basedir, 'data', 'processed', 'PD_train_onehot.csv'), index=False, sep=";")
+    PD_test.to_csv(os.path.join(basedir, 'data', 'processed', 'PD_test_onehot.csv'), index=False, sep=";")

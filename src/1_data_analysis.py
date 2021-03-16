@@ -1,9 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-from scipy.stats import ttest_ind
-from src.utils import print_test_results, calc_annual_return_vec, weight_of_evidence, plot_woe
-from src.utils import def_rates_by_categorical, int_rates_by_categorical, returns_by_categorical, def_rates_by_hist
+import src.utils as utils
 from config import basedir
 
 
@@ -14,20 +12,34 @@ if __name__ == "__main__":
     # Calculate "issue year"
     df['issue_year'] = df['issue_d'].apply(lambda x: int(x.split('-')[1]))
 
+    utils.plot_histogram(df, column='term')
+    utils.plot_histogram(df, column='grade')
+    utils.plot_histogram(df, column='sub_grade', rotation=90)
+    utils.plot_histogram(df, column='home_ownership')
+    utils.plot_histogram(df, column='addr_state', rotation=90)
+    utils.plot_histogram(df, column='purpose', rotation=90)
+    utils.plot_histogram(df, column='emp_length')
+    utils.plot_histogram(df, column='loan_amnt')
+    utils.plot_histogram(df, column='int_rate')
+    utils.plot_histogram(df, column='annual_inc')
+    utils.plot_histogram(df, column='dti')
+    utils.plot_histogram(df, column='fico_range_low', rotation=90)
+    utils.plot_histogram(df, column='income_to_installment')
+
     # Basic data analysis
-    def_rates_by_categorical(df, 'purpose')
-    def_rates_by_categorical(df, 'home_ownership')
-    def_rates_by_categorical(df, 'grade')
-    def_rates_by_categorical(df, 'emp_length')
-    def_rates_by_categorical(df, 'issue_year')
-    int_rates_by_categorical(df, 'grade', with_variance=True)
-    int_rates_by_categorical(df, 'purpose', with_variance=True)
-    returns_by_categorical(df, 'grade')
-    returns_by_categorical(df, 'purpose')
-    bin_idx = np.linspace(0, 250000, 40)
-    def_rates_by_hist(df, 'annual_inc', bin_idx=bin_idx)
-    bin_idx = np.linspace(5, 25, 40)
-    def_rates_by_hist(df, 'int_rate', bin_idx=bin_idx)
+    # utils.def_rates_by_categorical(df, 'purpose')
+    # utils.def_rates_by_categorical(df, 'home_ownership')
+    # utils.def_rates_by_categorical(df, 'grade')
+    # utils.def_rates_by_categorical(df, 'emp_length')
+    # utils.def_rates_by_categorical(df, 'issue_year')
+    # utils.int_rates_by_categorical(df, 'grade', with_variance=True)
+    # utils.int_rates_by_categorical(df, 'purpose', with_variance=True)
+    # utils.returns_by_categorical(df, 'grade')
+    # utils.returns_by_categorical(df, 'purpose')
+    # bin_idx = np.linspace(0, 250000, 40)
+    # utils.def_rates_by_hist(df, 'annual_inc', bin_idx=bin_idx)
+    # bin_idx = np.linspace(5, 25, 40)
+    # utils.def_rates_by_hist(df, 'int_rate', bin_idx=bin_idx)
 
     # Do fine classing of continuous variables
     df["loan_amnt"] = pd.qcut(df["loan_amnt"], 10)
@@ -37,24 +49,24 @@ if __name__ == "__main__":
     df["fico_range_low"] = pd.cut(df["fico_range_low"], 20)
     df["income_to_installment"] = pd.qcut(df["income_to_installment"], 20)
 
-    # print(weight_of_evidence(df, var_name='grade', good_bad_var='good_bad').to_string())
-    # print(weight_of_evidence(df, var_name='home_ownership', good_bad_var='good_bad').to_string())
-    # print(weight_of_evidence(df, var_name='addr_state', good_bad_var='good_bad').to_string())
-    # print(weight_of_evidence(df, var_name='emp_length', good_bad_var='good_bad').to_string())
+    # print(utils.woe(df, var_name='grade', good_bad_var='good_bad').to_string())
+    # print(utils.woe(df, var_name='home_ownership', good_bad_var='good_bad').to_string())
+    # print(utils.woe(df, var_name='addr_state', good_bad_var='good_bad').to_string())
+    # print(utils.woe(df, var_name='emp_length', good_bad_var='good_bad').to_string())
 
-    plot_woe(weight_of_evidence(df, var_name='term', good_bad_var='good_bad'))
-    plot_woe(weight_of_evidence(df, var_name='grade', good_bad_var='good_bad'))
-    plot_woe(weight_of_evidence(df, var_name='sub_grade', good_bad_var='good_bad'))
-    plot_woe(weight_of_evidence(df, var_name='home_ownership', good_bad_var='good_bad'))
-    plot_woe(weight_of_evidence(df, var_name='addr_state', good_bad_var='good_bad'))
-    plot_woe(weight_of_evidence(df, var_name='purpose', good_bad_var='good_bad'))
-    plot_woe(weight_of_evidence(df, var_name='emp_length', good_bad_var='good_bad', discrete=False))
-    plot_woe(weight_of_evidence(df, var_name='loan_amnt', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_woe(weight_of_evidence(df, var_name='int_rate', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_woe(weight_of_evidence(df, var_name='annual_inc', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_woe(weight_of_evidence(df, var_name='dti', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_woe(weight_of_evidence(df, var_name='fico_range_low', good_bad_var='good_bad', discrete=False), rotation=35)
-    plot_woe(weight_of_evidence(df, var_name='income_to_installment', good_bad_var='good_bad', discrete=False), rotation=35)
+    utils.plot_woe(utils.woe(df, var_name='term', good_bad_var='good_bad'))
+    utils.plot_woe(utils.woe(df, var_name='grade', good_bad_var='good_bad'))
+    utils.plot_woe(utils.woe(df, var_name='sub_grade', good_bad_var='good_bad'))
+    utils.plot_woe(utils.woe(df, var_name='home_ownership', good_bad_var='good_bad'))
+    utils.plot_woe(utils.woe(df, var_name='addr_state', good_bad_var='good_bad'))
+    utils.plot_woe(utils.woe(df, var_name='purpose', good_bad_var='good_bad'))
+    utils.plot_woe(utils.woe(df, var_name='emp_length', good_bad_var='good_bad', discrete=False))
+    utils.plot_woe(utils.woe(df, var_name='loan_amnt', good_bad_var='good_bad', discrete=False), rotation=35)
+    utils.plot_woe(utils.woe(df, var_name='int_rate', good_bad_var='good_bad', discrete=False), rotation=35)
+    utils.plot_woe(utils.woe(df, var_name='annual_inc', good_bad_var='good_bad', discrete=False), rotation=35)
+    utils.plot_woe(utils.woe(df, var_name='dti', good_bad_var='good_bad', discrete=False), rotation=35)
+    utils.plot_woe(utils.woe(df, var_name='fico_range_low', good_bad_var='good_bad', discrete=False), rotation=35)
+    utils.plot_woe(utils.woe(df, var_name='income_to_installment', good_bad_var='good_bad', discrete=False), rotation=35)
 
     # # Print results for all loans and different subsets
     # print_test_results(f"CAGR on all loans:", df)

@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import scipy.stats as stat
@@ -5,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, roc_curve, roc_auc_score
+from config import basedir
 sns.set()
 
 
@@ -29,15 +31,14 @@ class LogisticRegression_with_p_values:
 
 if __name__ == "__main__":
     # Read the datasets
-    X_train = pd.read_csv('../data/processed/X_train_onehot.csv', sep=";")
-    y_train = pd.read_csv('../data/processed/y_train.csv', sep=";")
-    X_test = pd.read_csv('../data/processed/X_test_onehot.csv', sep=";")
-    y_test = pd.read_csv('../data/processed/y_test.csv', sep=";")
+    train = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'PD_train_onehot.csv'), sep=";")
+    test = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'PD_test_onehot.csv'), sep=";")
 
+    # Define model and fit to training data
     reg = LogisticRegression(max_iter=10000)
-    reg.fit(X_train, y_train)
+    reg.fit(train.drop(columns="good_bad"), train[["good_bad"]])
 
-    summary_table = pd.DataFrame(columns=["feature"], data=X_train.columns.values)
+    summary_table = pd.DataFrame(columns=["feature"], data=train.columns.values)
     summary_table["coefficient"] = np.transpose(reg.coef_)
     summary_table.index = summary_table.index + 1
     summary_table.loc[0] = ["intercept", reg.intercept_[0]]
@@ -45,15 +46,15 @@ if __name__ == "__main__":
     summary_table.to_csv('../results/SummaryTable_LogisticRegression.csv', sep=";", index=False)
     # print(summary_table)
 
-    y_hat_test = reg.predict(X_test)
-    print("Accuracy:", accuracy_score(y_test, y_hat_test))
+    y_hat_test = reg.predict(test)
+    print("Accuracy:", accuracy_score(test[["good_bad"]], y_hat_test))
 
-    y_hat_test_proba = reg.predict_proba(X_test)[:][:, 1]
-    predictions = pd.concat([y_test.reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
+    y_hat_test_proba = reg.predict_proba(test)[:][:, 1]
+    predictions = pd.concat([test[["good_bad"]].reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
     predictions.columns = ["y_test", "y_hat_test_proba"]
 
-    fpr, tpr, thresholds = roc_curve(y_test, y_hat_test_proba)
-    auc = roc_auc_score(y_test, y_hat_test_proba)
+    fpr, tpr, thresholds = roc_curve(test[["good_bad"]], y_hat_test_proba)
+    auc = roc_auc_score(test[["good_bad"]], y_hat_test_proba)
 
     plt.figure()
     plt.plot(fpr, tpr)
@@ -61,5 +62,5 @@ if __name__ == "__main__":
     plt.xlabel("False positive rate")
     plt.ylabel("True positive rate")
     plt.title(f"ROC curve (AUC = {np.round(auc, 2)})")
-    plt.savefig('../results/PD_LogisticRegression_model_auc.png')
+    plt.savefig(os.path.join(basedir, 'results', 'roc', 'PD_LogisticRegression.png'))
     plt.show()

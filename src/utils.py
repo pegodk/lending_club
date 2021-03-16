@@ -5,7 +5,6 @@ import itertools
 import matplotlib.pyplot as plt
 import seaborn as sns
 from config import basedir
-
 sns.set()
 
 
@@ -15,7 +14,7 @@ def convert_to_num(pd_series):
     return pd_series
 
 
-def weight_of_evidence(df, var_name, good_bad_var, discrete=True):
+def woe(df, var_name, good_bad_var, discrete=True):
     df = pd.concat([df[var_name], df[good_bad_var]], axis=1)
     df = pd.concat([df.groupby(df.columns.values[0], as_index=False)[df.columns.values[1]].count(),
                     df.groupby(df.columns.values[0], as_index=False)[df.columns.values[1]].mean()], axis=1)
@@ -48,8 +47,6 @@ def plot_woe(df_woe, rotation=0):
     plt.tight_layout()
     plt.savefig(os.path.join(basedir, 'results', 'weight_of_evidence', df_woe.columns[0] + '.png'))
 
-    os.path.join(basedir, 'results', 'weight_of_evidence', )
-
 
 def print_test_results(print_str, df):
     print_str = print_str + " " * (50 - len(print_str))
@@ -75,6 +72,21 @@ def calc_annual_return_vec(df):
     return np.round(100 / np.power(funded_amnt / total_pymnt, 1 / (avg_term / 2)) - 100, 2)
 
 
+def plot_histogram(df, column, rotation=0):
+
+    x = df[column].sort_values()
+
+    plt.figure()
+    if len(x.unique()) > 50:
+        sns.histplot(x, bins=20)
+    else:
+        sns.countplot(x)
+    plt.title('Histogram of ' + column)
+    plt.xticks(rotation=rotation)
+    plt.tight_layout()
+    plt.savefig(os.path.join(basedir, 'results', 'histogram', column + '.png'))
+
+
 def def_rates_by_categorical(df, column, sort=True):
     grouped = df.groupby([column, 'good_bad'])
     def_counts = grouped['loan_amnt'].count().unstack()
@@ -88,7 +100,7 @@ def def_rates_by_categorical(df, column, sort=True):
     ax.set_title("Default rates by {}".format(column))
     ax.set_xlabel(column)
     plt.tight_layout()
-    plt.savefig(os.path.join(basedir, 'results', 'plots', 'histogram_' + column + '.png'))
+    plt.savefig(os.path.join(basedir, 'results', 'plots', 'defaultRate_' + column + '.png'))
     plt.close()
 
 
