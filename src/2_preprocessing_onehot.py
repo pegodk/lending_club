@@ -16,11 +16,11 @@ def preprocess(train, test, continuous_vars):
     return train, test
 
 
-def one_hot_encoder(X_train, X_test):
+def one_hot_encoder(X_train, X_test, cols_to_encode):
     X_train_enc = None
     X_test_enc = None
 
-    for col in X_train.columns:
+    for col in cols_to_encode:
 
         # Fit encoder to training data
         encoder = OneHotEncoder()
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     PD_train = df_train[input_vars]
     PD_test = df_test[input_vars]
 
-    PD_train, PD_test = one_hot_encoder(PD_train, PD_test)
+    PD_train, PD_test = one_hot_encoder(PD_train, PD_test, cols_to_encode=input_vars[:-1])
 
     print(PD_train[:5].to_string())
 
