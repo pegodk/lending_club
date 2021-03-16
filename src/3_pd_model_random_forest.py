@@ -14,8 +14,13 @@ if __name__ == "__main__":
     train = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'PD_train_continuous.csv'), sep=";")
     test = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'PD_test_continuous.csv'), sep=";")
 
-    print('Length of training set:', len(train[["good_bad"]]))
-    print('Length of testing set: ', len(test[["good_bad"]]))
+    X_train = np.array(train.drop(columns="good_bad"))
+    y_train = np.array(train["good_bad"])
+    X_test = np.array(test.drop(columns="good_bad"))
+    y_test = np.array(test["good_bad"])
+
+    print('Length of training set:', len(y_train))
+    print('Length of testing set: ', len(y_test))
 
     ####################################################################################################################
     ######################################      Random Forest Classification      ######################################
@@ -23,20 +28,20 @@ if __name__ == "__main__":
 
     # Define model and fit on training dataset
     reg = RandomForestClassifier()
-    reg.fit(train, train[["good_bad"]])
+    reg.fit(X_train, y_train)
 
-    y_train_predict = np.round(reg.predict(train), 2)
-    y_test_predict = np.round(reg.predict(test), 2)
+    y_train_predict = np.round(reg.predict(X_train), 2)
+    y_test_predict = np.round(reg.predict(X_test), 2)
 
-    y_hat_test = reg.predict(test)
-    print("Accuracy:", accuracy_score(test[["good_bad"]], y_hat_test))
+    y_hat_test = reg.predict(X_test)
+    print("Accuracy:", accuracy_score(y_test, y_hat_test))
 
-    y_hat_test_proba = reg.predict_proba(test)[:][:, 1]
-    predictions = pd.concat([test[["good_bad"]].reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
+    y_hat_test_proba = reg.predict_proba(X_test)[:][:, 1]
+    predictions = pd.concat([y_test.reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
     predictions.columns = ["y_test", "y_hat_test_proba"]
 
-    fpr, tpr, thresholds = roc_curve(test[["good_bad"]], y_hat_test_proba)
-    auc = roc_auc_score(test[["good_bad"]], y_hat_test_proba)
+    fpr, tpr, thresholds = roc_curve(y_test, y_hat_test_proba)
+    auc = roc_auc_score(y_test, y_hat_test_proba)
 
     plt.figure()
     plt.plot(fpr, tpr)
@@ -47,7 +52,7 @@ if __name__ == "__main__":
     plt.savefig(os.path.join(basedir, 'results', 'roc', 'PD_RandomForest.png'))
     plt.show()
 
-    scores = mean_absolute_error(y_test_predict, test[["good_bad"]])
+    scores = mean_absolute_error(y_test_predict, y_test)
     print('Mean Abs Error: {:.2f}'.format(scores))
 
     ####################################################################################################################

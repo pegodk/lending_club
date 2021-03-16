@@ -34,9 +34,11 @@ if __name__ == "__main__":
     train = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'PD_train_onehot.csv'), sep=";")
     test = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'PD_test_onehot.csv'), sep=";")
 
+    target_var = "good_bad"
+
     # Define model and fit to training data
     reg = LogisticRegression(max_iter=10000)
-    reg.fit(train.drop(columns="good_bad"), train[["good_bad"]])
+    reg.fit(train.drop(columns=target_var), train[target_var])
 
     summary_table = pd.DataFrame(columns=["feature"], data=train.columns.values)
     summary_table["coefficient"] = np.transpose(reg.coef_)
@@ -46,15 +48,15 @@ if __name__ == "__main__":
     summary_table.to_csv('../results/SummaryTable_LogisticRegression.csv', sep=";", index=False)
     # print(summary_table)
 
-    y_hat_test = reg.predict(test)
-    print("Accuracy:", accuracy_score(test[["good_bad"]], y_hat_test))
+    y_hat_test = reg.predict(test.drop(columns=target_var))
+    print("Accuracy:", accuracy_score(test[target_var], y_hat_test))
 
-    y_hat_test_proba = reg.predict_proba(test)[:][:, 1]
-    predictions = pd.concat([test[["good_bad"]].reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
+    y_hat_test_proba = reg.predict_proba(test.drop(columns=target_var))[:][:, 1]
+    predictions = pd.concat([test[target_var].reset_index(drop=True), pd.DataFrame(y_hat_test_proba)], axis=1)
     predictions.columns = ["y_test", "y_hat_test_proba"]
 
-    fpr, tpr, thresholds = roc_curve(test[["good_bad"]], y_hat_test_proba)
-    auc = roc_auc_score(test[["good_bad"]], y_hat_test_proba)
+    fpr, tpr, thresholds = roc_curve(test[target_var], y_hat_test_proba)
+    auc = roc_auc_score(test[target_var], y_hat_test_proba)
 
     plt.figure()
     plt.plot(fpr, tpr)
