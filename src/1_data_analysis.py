@@ -11,6 +11,24 @@ if __name__ == "__main__":
     # Read the datasets
     df = pd.read_csv(os.path.join(basedir, 'data', 'temp', 'dataset_train.csv'))
 
+    # Calculate "issue year"
+    df['issue_year'] = df['issue_d'].apply(lambda x: int(x.split('-')[1]))
+
+    # Basic data analysis
+    def_rates_by_categorical(df, 'purpose')
+    def_rates_by_categorical(df, 'home_ownership')
+    def_rates_by_categorical(df, 'grade')
+    def_rates_by_categorical(df, 'emp_length')
+    def_rates_by_categorical(df, 'issue_year')
+    int_rates_by_categorical(df, 'grade', with_variance=True)
+    int_rates_by_categorical(df, 'purpose', with_variance=True)
+    returns_by_categorical(df, 'grade')
+    returns_by_categorical(df, 'purpose')
+    bin_idx = np.linspace(0, 250000, 40)
+    def_rates_by_hist(df, 'annual_inc', bin_idx=bin_idx)
+    bin_idx = np.linspace(5, 25, 40)
+    def_rates_by_hist(df, 'int_rate', bin_idx=bin_idx)
+
     # Do fine classing of continuous variables
     df["loan_amnt"] = pd.qcut(df["loan_amnt"], 10)
     df["int_rate"] = pd.qcut(df["int_rate"], 20)
@@ -63,24 +81,3 @@ if __name__ == "__main__":
     # print_test_results(f"CAGR on income above 100k and below 200k:", df[np.logical_and(df['annual_inc'] > 100000, df['annual_inc'] < 200000)])
     # print_test_results(f"CAGR on income above 200k and below 400k:", df[np.logical_and(df['annual_inc'] > 200000, df['annual_inc'] < 400000)])
     # print_test_results(f"CAGR on income above 400k:", df[df['annual_inc'] > 400000])
-
-    # # Calculate "issue year"
-    # df['issue_year'] = df['issue_d'].apply(lambda x: int(x.split('-')[1]))
-    #
-    # def_rates_by_categorical(df, 'purpose')
-    # def_rates_by_categorical(df, 'home_ownership')
-    # def_rates_by_categorical(df, 'grade')
-    # def_rates_by_categorical(df, 'emp_length')
-    # def_rates_by_categorical(df, 'issue_year')
-    #
-    # int_rates_by_categorical(df, 'grade', with_variance=True)
-    # int_rates_by_categorical(df, 'purpose', with_variance=True)
-    #
-    # returns_by_categorical(df, 'grade')
-    # returns_by_categorical(df, 'purpose')
-    #
-    # bin_idx = np.linspace(0, 250000, 40)
-    # def_rates_by_hist(df, 'annual_inc', bin_idx=bin_idx)
-    #
-    # bin_idx = np.linspace(5, 25, 40)
-    # def_rates_by_hist(df, 'int_rate', bin_idx=bin_idx)

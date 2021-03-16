@@ -1,8 +1,11 @@
+import os
 import numpy as np
 import pandas as pd
 import itertools
 import matplotlib.pyplot as plt
 import seaborn as sns
+from config import basedir
+
 sns.set()
 
 
@@ -43,7 +46,9 @@ def plot_woe(df_woe, rotation=0):
     plt.title("Weight of Evidence by " + df_woe.columns[0].upper())
     plt.xticks(rotation=rotation)
     plt.tight_layout()
-    plt.savefig('../results/weight_of_evidence/' + df_woe.columns[0] + '.png')
+    plt.savefig(os.path.join(basedir, 'results', 'weight_of_evidence', df_woe.columns[0] + '.png'))
+
+    os.path.join(basedir, 'results', 'weight_of_evidence', )
 
 
 def print_test_results(print_str, df):
@@ -74,7 +79,7 @@ def def_rates_by_categorical(df, column, sort=True):
     grouped = df.groupby([column, 'good_bad'])
     def_counts = grouped['loan_amnt'].count().unstack()
     N = def_counts.sum(axis=1)
-    props = def_counts['Charged Off'] / N
+    props = def_counts[0] / N
     if sort:
         props = props.sort_values()
     plt.figure()
@@ -83,7 +88,7 @@ def def_rates_by_categorical(df, column, sort=True):
     ax.set_title("Default rates by {}".format(column))
     ax.set_xlabel(column)
     plt.tight_layout()
-    plt.savefig('../results/plots/histogram_' + column + '.png')
+    plt.savefig(os.path.join(basedir, 'results', 'plots', 'histogram_' + column + '.png'))
     plt.close()
 
 
@@ -108,7 +113,7 @@ def int_rates_by_categorical(df, column, with_variance=False, sort=True):
     ax.set_title("Interest rate by {}".format(column))
     ax.set_xlabel(column)
     plt.tight_layout()
-    plt.savefig('../results/plots/interestRate_' + column + '.png')
+    plt.savefig(os.path.join(basedir, 'results', 'plots', 'interestRate_' + column + '.png'))
     plt.close()
 
 
@@ -134,7 +139,7 @@ def returns_by_categorical(df, column, with_variance=False, sort=True):
     ax.set_title("Returns by {}".format(column))
     ax.set_xlabel(column)
     plt.tight_layout()
-    plt.savefig('../results/plots/returns_' + column + '.png')
+    plt.savefig(os.path.join(basedir, 'results', 'plots', 'returns_' + column + '.png'))
     plt.close()
 
 
@@ -145,8 +150,8 @@ def def_rates_by_hist(df, column, bin_idx):
     def_counts = def_counts.fillna(value=0)
 
     x = np.array(def_counts.index)
-    defaults = np.array(def_counts['Charged Off'])
-    total = np.array(def_counts['Fully Paid']) + defaults
+    defaults = np.array(def_counts[0])
+    total = np.array(def_counts[1]) + defaults
 
     no_default = np.zeros(np.size(bin_idx) - 1)
     no_total = np.zeros(np.size(bin_idx) - 1)
@@ -168,7 +173,7 @@ def def_rates_by_hist(df, column, bin_idx):
     plt.hist(x, bins=bin_idx)
     plt.title('Histogram of ' + column)
     plt.tight_layout()
-    plt.savefig('../results/plots/histogram_' + column + '.png')
+    plt.savefig(os.path.join(basedir, 'results', 'plots', 'histogram_' + column + '.png'))
 
     plt.figure()
     plt.plot(x_new, no_rate)
@@ -176,7 +181,7 @@ def def_rates_by_hist(df, column, bin_idx):
     plt.xlabel(column)
     plt.ylabel("Default rate")
     plt.tight_layout()
-    plt.savefig('../results/plots/defaultRate_' + column + '.png')
+    plt.savefig(os.path.join(basedir, 'results', 'plots', 'defaultRate_' + column + '.png'))
 
 
 def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
