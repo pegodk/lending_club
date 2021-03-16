@@ -1,6 +1,8 @@
+import os
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+from config import basedir
 
 
 def label_encoder(X_train, X_test, categorical_cols):
@@ -16,8 +18,8 @@ def label_encoder(X_train, X_test, categorical_cols):
 
 if __name__ == "__main__":
     # Read the datasets
-    df_train = pd.read_csv('../data/temp/dataset_train.csv')
-    df_test = pd.read_csv('../data/temp/dataset_test.csv')
+    df_train = pd.read_csv(os.path.join(basedir, 'data', 'temp', 'dataset_train.csv'))
+    df_test = pd.read_csv(os.path.join(basedir, 'data', 'temp', 'dataset_test.csv'))
 
     input_vars = ["loan_amnt",
                   "term",
@@ -56,7 +58,7 @@ if __name__ == "__main__":
     print(X_train[:10].to_string())
     print(X_test[:10].to_string())
 
-    X_train.to_csv('../data/processed/X_train_continuous.csv', index=False, sep=";")
-    y_train.to_csv('../data/processed/y_train.csv', index=False, sep=";")
-    X_test.to_csv('../data/processed/X_test_continuous.csv', index=False, sep=";")
-    y_test.to_csv('../data/processed/y_test.csv', index=False, sep=";")
+    X_train.to_csv(os.path.join(basedir, 'data', 'processed', 'X_train_continuous.csv'), index=False, sep=";")
+    y_train.to_csv(os.path.join(basedir, 'data', 'processed', 'y_train.csv'), index=False, sep=";")
+    X_test.to_csv(os.path.join(basedir, 'data', 'processed', 'X_test_continuous.csv'), index=False, sep=";")
+    y_test.to_csv(os.path.join(basedir, 'data', 'processed', 'y_test.csv'), index=False, sep=";")

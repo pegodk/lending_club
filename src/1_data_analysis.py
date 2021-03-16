@@ -1,14 +1,15 @@
+import os
 import numpy as np
 import pandas as pd
 from scipy.stats import ttest_ind
 from src.utils import print_test_results, calc_annual_return_vec, weight_of_evidence, plot_woe
 from src.utils import def_rates_by_categorical, int_rates_by_categorical, returns_by_categorical, def_rates_by_hist
+from config import basedir
 
 
 if __name__ == "__main__":
     # Read the datasets
-    df = pd.read_csv('../data/temp/dataset_train.csv')
-    df_test = pd.read_csv('../data/temp/dataset_test.csv')
+    df = pd.read_csv(os.path.join(basedir, 'data', 'temp', 'dataset_train.csv'))
 
     # Do fine classing of continuous variables
     df["loan_amnt"] = pd.qcut(df["loan_amnt"], 10)

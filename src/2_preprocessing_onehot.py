@@ -1,6 +1,8 @@
+import os
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
+from config import basedir
 
 
 def preprocess(train, test, continuous_vars):
@@ -24,12 +26,12 @@ def one_hot_encoder(X_train, X_test):
         encoder = OneHotEncoder()
         enc_train = encoder.fit_transform(X_train[[col]])
         enc_train = pd.DataFrame(enc_train.toarray(), columns=encoder.categories_)
-        enc_train.columns = [col + "_" + str(new_col[0]) for new_col in enc_train.columns]
+        enc_train.columns = [col + ":" + str(new_col[0]) for new_col in enc_train.columns]
 
         # Apply fitted encoder to test data
         enc_test = encoder.transform(X_test[[col]])
         enc_test = pd.DataFrame(enc_test.toarray(), columns=encoder.categories_)
-        enc_test.columns = [col + "_" + str(new_col[0]) for new_col in enc_test.columns]
+        enc_test.columns = [col + ":" + str(new_col[0]) for new_col in enc_test.columns]
 
         if X_train_enc is not None and X_test_enc is not None:
             X_train_enc = pd.concat([X_train_enc, enc_train], axis=1)
@@ -42,8 +44,8 @@ def one_hot_encoder(X_train, X_test):
 
 if __name__ == "__main__":
     # Read the datasets
-    df_train = pd.read_csv('../data/temp/dataset_train.csv')
-    df_test = pd.read_csv('../data/temp/dataset_test.csv')
+    df_train = pd.read_csv(os.path.join(basedir, 'data', 'temp', 'dataset_train.csv'))
+    df_test = pd.read_csv(os.path.join(basedir, 'data', 'temp', 'dataset_test.csv'))
 
     df_train, df_test = preprocess(df_train, df_test, continuous_vars=["loan_amnt", "int_rate", "annual_inc", "dti",
                                                                        "fico_range_low", "income_to_installment"])
@@ -75,5 +77,5 @@ if __name__ == "__main__":
 
     print(X_train[:5].to_string())
 
-    X_train.to_csv('../data/processed/X_train_onehot.csv', index=False, sep=";")
-    X_test.to_csv('../data/processed/X_test_onehot.csv', index=False, sep=";")
+    X_train.to_csv(os.path.join(basedir, 'data', 'processed', 'X_train_onehot.csv'), index=False, sep=";")
+    X_test.to_csv(os.path.join(basedir, 'data', 'processed', 'X_test_onehot.csv'), index=False, sep=";")

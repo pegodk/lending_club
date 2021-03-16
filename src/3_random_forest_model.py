@@ -1,17 +1,20 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_absolute_error, accuracy_score, roc_curve, roc_auc_score
 from src.utils import calc_annual_return_vec, print_test_results
+from config import basedir
+
 
 if __name__ == "__main__":
 
     # Read the datasets
-    X_train = pd.read_csv('../data/processed/X_train_continuous.csv', sep=";")
-    y_train = pd.read_csv('../data/processed/y_train.csv', sep=";")
-    X_test = pd.read_csv('../data/processed/X_test_continuous.csv', sep=";")
-    y_test = pd.read_csv('../data/processed/y_test.csv', sep=";")
+    X_train = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'X_train_continuous.csv'), sep=";")
+    y_train = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'y_train.csv'), sep=";")
+    X_test = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'X_test_continuous.csv'), sep=";")
+    y_test = pd.read_csv(os.path.join(basedir, 'data', 'processed', 'y_test.csv'), sep=";")
 
     print('Length of training set:', len(y_train))
     print('Length of testing set: ', len(y_test))

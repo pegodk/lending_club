@@ -1,9 +1,14 @@
+import os
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.utils import process_emp_length, process_home_ownership, convert_to_num
+from config import basedir
+
 
 if __name__ == "__main__":
+
+    # Define columns to use in dataset
     columns_subset = ["loan_amnt",
                       "funded_amnt",
                       "term",
@@ -25,7 +30,8 @@ if __name__ == "__main__":
                       "fico_range_low",
                       "total_pymnt"]
 
-    df = pd.read_csv('../data/raw/accepted_2007_to_2018Q4.csv', usecols=columns_subset)
+    # Read dataset from csv file
+    df = pd.read_csv(os.path.join(basedir, 'data', 'raw', 'accepted_2007_to_2018Q4.csv'), usecols=columns_subset)
 
     # Create new features
     df['annual_inc'] = df['annual_inc'].fillna(0)
@@ -53,8 +59,8 @@ if __name__ == "__main__":
     train, test = train_test_split(df, test_size=0.2, random_state=42)
 
     # Save cleaned dataset to csv file
-    train.to_csv('../data/temp/dataset_train.csv', index=False)
-    test.to_csv('../data/temp/dataset_test.csv', index=False)
+    train.to_csv(os.path.join(basedir, 'data', 'temp', 'dataset_train.csv'), index=False)
+    test.to_csv(os.path.join(basedir, 'data', 'temp', 'dataset_test.csv'), index=False)
 
     print(train[:10].to_string())
     print(test[:10].to_string())
