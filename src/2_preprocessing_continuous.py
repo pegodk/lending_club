@@ -39,9 +39,9 @@ if __name__ == "__main__":
     PD_test = df_test[input_vars]
 
     PD_train, PD_test = label_encoder(PD_train, PD_test, categorical_cols=["grade",
-                                                                       "home_ownership",
-                                                                       "purpose",
-                                                                       "addr_state"])
+                                                                           "home_ownership",
+                                                                           "purpose",
+                                                                           "addr_state"])
 
     # Show NaNs in dataset
     print(PD_train[PD_train.isna().any(axis=1)].to_string())
